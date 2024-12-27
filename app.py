@@ -4,14 +4,14 @@ from flask_migrate import Migrate
 from datetime import datetime
 from functools import wraps
 from werkzeug.security import generate_password_hash, check_password_hash
-from config import SECRET_KEY, SQLALCHEMY_DATABASE_URI, SQLALCHEMY_TRACK_MODIFICATIONS
+from config import SK, SQLALCHEMY_DU, SQLALCHEMY_TM
 
 app = Flask(__name__)
-app.secret_key = SECRET_KEY
+app.secret_key = SK
 
 # Настройка подключения к PostgreSQL
-app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = SQLALCHEMY_TRACK_MODIFICATIONS
+app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DU
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = SQLALCHEMY_TM
 
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
@@ -287,7 +287,6 @@ def logout():
     session.pop('user_id', None)
     return redirect(url_for('login'))
 
-
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     registration_setting = SystemSetting.query.filter_by(name='is_registration_enabled').first()
@@ -315,12 +314,15 @@ def register():
                 db.session.commit()
             organization = org
 
-        new_user = User(username=username, organization=organization)
+        new_user = User(username=username, is_moderator=is_moderator, organization_id=organization_id)
         new_user.set_password(password)
         db.session.add(new_user)
         db.session.commit()
         session['user_id'] = new_user.id
         flash('Регистрация успешна.', 'success')
+        return redirect(url_for('index'))  # Добавлен return
+    return render_template('register.html')
+
 
 ##############################################################################
 # ГЛАВНАЯ + СОЗДАНИЕ ОБЪЕКТА
@@ -825,4 +827,4 @@ if __name__ == '__main__':
         if not SystemSetting.query.filter_by(name='is_registration_enabled').first():
             db.session.add(SystemSetting(name='is_registration_enabled', value=True))
             db.session.commit()
-    app.run(debug=True)
+    app.run(debug=True, port=5000)
