@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Система Реестрового Учёта</title>
+  <!-- Подключение Tailwind CSS из CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col">
+
+  <!-- Навигация -->
+  <nav class="bg-blue-700 text-white shadow">
+    <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+      <!-- Логотип и ссылки -->
+      <div class="flex items-center space-x-6">
+        <a href="{{ url_for('index') }}" class="text-xl font-bold hover:text-blue-200 transition">
+          Главная
+        </a>
+        <a href="{{ url_for('moderator_panel') }}" class="hover:text-blue-200 transition">
+          Панель модератора
+        </a>
+        <a href="{{ url_for('moderator_all_requests') }}" class="hover:text-blue-200 transition">
+          Все заявки
+        </a>
+        <a href="{{ url_for('admin_panel') }}" class="hover:text-blue-200 transition">
+          Админ панель
+        </a>
+        <a href="{{ url_for('admin_settings') }}" class="hover:text-blue-200 transition">
+          Настройки всей системы
+        </a>
+      </div>
+
+      <!-- Пользовательская секция -->
+      <div>
+        {% if user %}
+          <span class="mr-4">
+            Привет,
+            <strong>{{ user.username }}</strong>
+          </span>
+          <a
+            href="{{ url_for('logout') }}"
+            class="px-3 py-2 bg-red-500 rounded hover:bg-red-600 transition"
+          >
+            Выйти
+          </a>
+        {% else %}
+          <a
+            href="{{ url_for('login') }}"
+            class="px-3 py-2 bg-green-500 rounded hover:bg-green-600 transition"
+          >
+            Войти
+          </a>
+          <a
+            href="{{ url_for('register') }}"
+            class="ml-2 px-3 py-2 bg-blue-500 rounded hover:bg-blue-600 transition"
+          >
+            Регистрация
+          </a>
+        {% endif %}
+      </div>
+    </div>
+  </nav>
+
+  <!-- Основной контент -->
+  <main class="flex-grow container mx-auto px-4 py-8">
+    {% block content %}
+    {% endblock %}
+  </main>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div class="fixed top-0 right-0 mt-4 mr-4 space-y-2 z-50">
+      {% for category, message in messages %}
+        <div class="px-4 py-2 rounded-lg {% if category == 'success' %}bg-green-100 text-green-800{% elif category == 'error' %}bg-red-100 text-red-800{% else %}bg-gray-100 text-gray-800{% endif %}">
+          {{ message }}
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+  {% endwith %}
+
+  <!-- Футер -->
+  <footer class="bg-blue-700 text-white py-4 mt-8 shadow-inner">
+    <div class="container mx-auto text-center">
+      © {{ datetime.utcnow().year }}, версия 0.1
+    </div>
+  </footer>
+
+</body>
+</html>
