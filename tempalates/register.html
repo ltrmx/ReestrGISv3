@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Система Реестрового Учёта</title>
+  <!-- Подключение Tailwind CSS из CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 min-h-screen flex flex-col">
+
+  <!-- Основной контент -->
+  <main class="flex-grow container mx-auto px-4 py-8">
+
+    <div class="max-w-md mx-auto bg-white p-8 rounded shadow">
+      <h2 class="text-2xl font-bold mb-6 text-center">Регистрация</h2>
+      {% if error %}
+        <div class="mb-4 text-red-500">
+          {{ error }}
+        </div>
+      {% endif %}
+
+      <form method="POST" action="{{ url_for('register') }}">
+        <div class="mb-4">
+          <label for="username" class="block text-gray-700">Имя пользователя:</label>
+          <input type="text" id="username" name="username"
+                 class="w-full mt-1 p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                 required>
+        </div>
+        <div class="mb-6">
+          <label for="password" class="block text-gray-700">Пароль:</label>
+          <input type="password" id="password" name="password"
+                 class="w-full mt-1 p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                 required>
+        </div>
+        <div class="mb-6">
+          <label for="organization_name" class="block text-gray-700">Название Организации:</label>
+          <input type="text" id="organization_name" name="organization_name"
+                 class="w-full mt-1 p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                 placeholder="Введите название вашей организации">
+        </div>
+        <div class="flex justify-between items-center">
+          <button type="submit"
+                  class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+            Зарегистрироваться
+          </button>
+          <a href="{{ url_for('login') }}" class="text-blue-500 hover:underline">Войти</a>
+        </div>
+      </form>
+    </div>
+
+  </main>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div class="fixed top-0 right-0 mt-4 mr-4 space-y-2 z-50">
+      {% for category, message in messages %}
+        <div class="px-4 py-2 rounded-lg {% if category == 'success' %}bg-green-100 text-green-800{% elif category == 'error' %}bg-red-100 text-red-800{% else %}bg-gray-100 text-gray-800{% endif %}">
+          {{ message }}
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+  {% endwith %}
+
+  <!-- Футер -->
+  <footer class="bg-blue-600 text-white py-4">
+    <div class="container mx-auto text-center">
+      © {{ datetime.utcnow().year }} Система Реестрового Учёта. Все права защищены.
+    </div>
+  </footer>
+
+</body>
+
+</html>

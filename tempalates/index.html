@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% block content %}
+<!-- Кнопка создания объекта (только если авторизован) -->
+{% if user %}
+  <button
+    class="bg-blue-600 hover:bg-blue-800 text-white font-semibold py-2 px-4 rounded mb-6 transition"
+    onclick="document.getElementById('createObjectModal').classList.remove('hidden')">
+    Создать объект
+  </button>
+{% endif %}
+
+<!-- Список объектов -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+  {% for obj in objects %}
+    <div class="bg-white shadow-md rounded-lg p-6 hover:shadow-xl transition">
+      <h3 class="text-xl font-semibold mb-2 text-gray-800">
+        Объект #{{ obj.id }}
+      </h3>
+      <!-- Статус объекта = статус последней заявки -->
+      <p class="text-gray-600 mb-4">
+        Статус: <span class="font-medium">“{{ object_status_map[obj.id] }}”</span>
+      </p>
+      <a
+        href="{{ url_for('object_edit', object_id=obj.id) }}"
+        class="inline-block bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded transition"
+      >
+        Открыть
+      </a>
+    </div>
+  {% else %}
+    <p class="text-gray-600">Нет созданных объектов.</p>
+  {% endfor %}
+</div>
+
+<!-- Модальное окно для подтверждения создания объекта -->
+<div
+  id="createObjectModal"
+  class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+>
+  <div class="bg-white rounded-lg shadow-lg w-full max-w-md p-6 relative">
+    <button
+      class="absolute top-2 right-2 text-gray-500 hover:text-gray-700 transition"
+      onclick="document.getElementById('createObjectModal').classList.add('hidden')"
+    >
+      &times;
+    </button>
+    <h2 class="text-2xl font-bold mb-4 text-gray-800">Создать новый объект</h2>
+    <p class="text-gray-700 mb-6">Вы уверены, что хотите создать новый объект? Созданный объект нельзя удалить.</p>
+    <form method="POST" action="{{ url_for('create_object') }}" class="flex justify-end space-x-4">
+      <button
+        type="button"
+        class="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400 transition"
+        onclick="document.getElementById('createObjectModal').classList.add('hidden')"
+      >
+        Отмена
+      </button>
+      <button
+        type="submit"
+        class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+      >
+        Создать
+      </button>
+    </form>
+  </div>
+</div>
+{% endblock %}

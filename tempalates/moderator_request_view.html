@@ -1,0 +1,346 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="mx-auto bg-white shadow-lg rounded-lg p-8 space-y-6">
+
+  <!-- Основная информация о заявке -->
+  <div class="bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-md rounded-lg p-6 mb-8">
+    <h1 class="text-4xl font-bold">Заявка #{{ req.id }}</h1>
+    <p class="text-lg mt-2">
+      <strong>Объект:</strong> #{{ req.object_id }}<br>
+      <strong>Автор:</strong> {{ req.author.username }}<br>
+      <strong>Статус:</strong> <span class="text-yellow-300">{{ req.request_status }}</span><br>
+      <strong>Дата создания:</strong> {{ req.created_at.strftime('%d.%m.%Y %H:%M') }}
+    </p>
+  </div>
+
+  <!-- Причина отклонения (если применимо) -->
+  {% if req.request_status == 'не принят к учёту' %}
+    <div class="mt-4 bg-red-50 p-6 border border-red-200 rounded-lg">
+      <h3 class="text-2xl font-semibold text-red-600 mb-2 text-center">Причина отклонения:</h3>
+      <p class="text-red-700 text-center">
+        {{ req.reject_comment if req.reject_comment else 'Комментарий не указан' }}
+      </p>
+    </div>
+  {% endif %}
+
+  <!-- Блоки с атрибутами -->
+  <div class="space-y-8">
+    <!-- Атрибут 1 -->
+    <div class="bg-gray-50 p-6 rounded-lg shadow-inner">
+      <h2 class="text-2xl font-semibold text-gray-800 border-b pb-4 mb-4 text-center">Атрибут 1</h2>
+      {% if req.attr1 %}
+        <dl class="space-y-4">
+          <!-- Пример одного поля с подсветкой изменений -->
+          <div class="flex">
+            <dt class="w-1/3 text-right font-medium text-gray-700">Полное наименование информационной системы:</dt>
+            <dd class="w-2/3 text-gray-900 ml-4 {% if prev_req and req.attr1.full_name_information_system != prev_req.attr1.full_name_information_system %}bg-yellow-100{% endif %}">
+              {{ req.attr1.full_name_information_system }}
+            </dd>
+          </div>
+          <!-- Сокращённое наименование информационной системы -->
+          <div class="flex">
+            <dt class="w-1/3 text-right font-medium text-gray-700">Сокращённое наименование информационной системы:</dt>
+            <dd class="w-2/3 text-gray-900 ml-4 {% if prev_req and req.attr1.short_name_information_system != prev_req.attr1.short_name_information_system %}bg-yellow-100{% endif %}">
+              {{ req.attr1.short_name_information_system }}
+            </dd>
+          </div>
+          <!-- Полное наименование оператора -->
+          <div class="flex">
+            <dt class="w-1/3 text-right font-medium text-gray-700">Полное наименование оператора:</dt>
+            <dd class="w-2/3 text-gray-900 ml-4 {% if prev_req and req.attr1.full_name_operator != prev_req.attr1.full_name_operator %}bg-yellow-100{% endif %}">
+              {{ req.attr1.full_name_operator }}
+            </dd>
+          </div>
+          <!-- Сокращённое наименование оператора -->
+          <div class="flex">
+            <dt class="w-1/3 text-right font-medium text-gray-700">Сокращённое наименование оператора:</dt>
+            <dd class="w-2/3 text-gray-900 ml-4 {% if prev_req and req.attr1.short_name_operator != prev_req.attr1.short_name_operator %}bg-yellow-100{% endif %}">
+              {{ req.attr1.short_name_operator }}
+            </dd>
+          </div>
+          <!-- Полные наименования пользователей -->
+          <div class="flex">
+            <dt class="w-1/3 text-right font-medium text-gray-700">Полные наименования пользователей:</dt>
+            <dd class="w-2/3 text-gray-900 ml-4 {% if prev_req and req.attr1.full_names_users != prev_req.attr1.full_names_users %}bg-yellow-100{% endif %}">
+              {{ req.attr1.full_names_users }}
+            </dd>
+          </div>
+          <!-- Сокращённые наименования пользователей -->
+          <div class="flex">
+            <dt class="w-1/3 text-right font-medium text-gray-700">Сокращённые наименования пользователей:</dt>
+            <dd class="w-2/3 text-gray-900 ml-4 {% if prev_req and req.attr1.short_names_users != prev_req.attr1.short_names_users %}bg-yellow-100{% endif %}">
+              {{ req.attr1.short_names_users }}
+            </dd>
+          </div>
+          <!-- Дата ввода в эксплуатацию -->
+          <div class="flex">
+            <dt class="w-1/3 text-right font-medium text-gray-700">Дата ввода в эксплуатацию:</dt>
+            <dd class="w-2/3 text-gray-900 ml-4 {% if prev_req and (req.attr1.commissioning_date != prev_req.attr1.commissioning_date) %}bg-yellow-100{% endif %}">
+              {{ req.attr1.commissioning_date.strftime('%d.%m.%Y') if req.attr1.commissioning_date else 'Не указана' }}
+            </dd>
+          </div>
+          <!-- Ответственное подразделение -->
+          <div class="flex">
+            <dt class="w-1/3 text-right font-medium text-gray-700">Ответственное подразделение:</dt>
+            <dd class="w-2/3 text-gray-900 ml-4 {% if prev_req and req.attr1.responsible_department != prev_req.attr1.responsible_department %}bg-yellow-100{% endif %}">
+              {{ req.attr1.responsible_department }}
+            </dd>
+          </div>
+          <!-- Руководитель подразделения -->
+          <div class="flex">
+            <dt class="w-1/3 text-right font-medium text-gray-700">Руководитель подразделения:</dt>
+            <dd class="w-2/3 text-gray-900 ml-4 {% if prev_req and req.attr1.head_of_department_details != prev_req.attr1.head_of_department_details %}bg-yellow-100{% endif %}">
+              {{ req.attr1.head_of_department_details }}
+            </dd>
+          </div>
+          <!-- Ответственное лицо -->
+          <div class="flex">
+            <dt class="w-1/3 text-right font-medium text-gray-700">Ответственное лицо:</dt>
+            <dd class="w-2/3 text-gray-900 ml-4 {% if prev_req and req.attr1.responsible_person_details != prev_req.attr1.responsible_person_details %}bg-yellow-100{% endif %}">
+              {{ req.attr1.responsible_person_details }}
+            </dd>
+          </div>
+          <!-- Цель -->
+          <div class="flex">
+            <dt class="w-1/3 text-right font-medium text-gray-700">Цель:</dt>
+            <dd class="w-2/3 text-gray-900 ml-4 {% if prev_req and req.attr1.purpose != prev_req.attr1.purpose %}bg-yellow-100{% endif %}">
+              {{ req.attr1.purpose }}
+            </dd>
+          </div>
+          <!-- Назначение -->
+          <div class="flex">
+            <dt class="w-1/3 text-right font-medium text-gray-700">Назначение:</dt>
+            <dd class="w-2/3 text-gray-900 ml-4 {% if prev_req and req.attr1.designation != prev_req.attr1.designation %}bg-yellow-100{% endif %}">
+              {{ req.attr1.designation }}
+            </dd>
+          </div>
+          <!-- Область применения -->
+          <div class="flex">
+            <dt class="w-1/3 text-right font-medium text-gray-700">Область применения:</dt>
+            <dd class="w-2/3 text-gray-900 ml-4 {% if prev_req and req.attr1.area_of_application != prev_req.attr1.area_of_application %}bg-yellow-100{% endif %}">
+              {{ req.attr1.area_of_application }}
+            </dd>
+          </div>
+          <!-- Функции -->
+          <div class="flex">
+            <dt class="w-1/3 text-right font-medium text-gray-700">Функции:</dt>
+            <dd class="w-2/3 text-gray-900 ml-4 {% if prev_req and req.attr1.functions != prev_req.attr1.functions %}bg-yellow-100{% endif %}">
+              {{ req.attr1.functions }}
+            </dd>
+          </div>
+        </dl>
+      {% else %}
+        <p class="text-gray-500 text-center">Атрибут 1 не заполнен</p>
+      {% endif %}
+    </div>
+
+    <!-- Атрибут 2 -->
+    <div class="bg-gray-50 p-6 rounded-lg shadow-inner">
+      <h2 class="text-2xl font-semibold text-gray-800 border-b pb-4 mb-4 text-center">Атрибут 2</h2>
+      {% if req.status_1_enabled and req.attr2 %}
+        <dl class="space-y-4">
+          <!-- Реквизиты решения -->
+          <div class="flex">
+            <dt class="w-1/3 text-right font-medium text-gray-700">Реквизиты решения:</dt>
+            <dd class="w-2/3 text-gray-900 ml-4 {% if prev_req and req.attr2.data1 != prev_req.attr2.data1 %}bg-yellow-100{% endif %}">
+              {{ req.attr2.data1 }}
+            </dd>
+          </div>
+          <!-- Реквизиты правового акта -->
+          <div class="flex">
+            <dt class="w-1/3 text-right font-medium text-gray-700">
+              Реквизиты правового акта исполнительного органа государственной власти Республики Саха (Якутия) о порядке и сроках ввода в эксплуатацию информационной системы:
+            </dt>
+            <dd class="w-2/3 text-gray-900 ml-4 {% if prev_req and req.attr2.data2 != prev_req.attr2.data2 %}bg-yellow-100{% endif %}">
+              {{ req.attr2.data2 }}
+            </dd>
+          </div>
+          <!-- Причина отклонения (если применимо) -->
+          {% if req.request_status == 'не принят к учёту' and req.reject_comment %}
+            <div class="flex">
+              <dt class="w-1/3 text-right font-medium text-gray-700">Причина отклонения:</dt>
+              <dd class="w-2/3 text-red-600 ml-4">{{ req.reject_comment }}</dd>
+            </div>
+          {% endif %}
+        </dl>
+      {% else %}
+        <p class="text-gray-500 text-center">Атрибут 2 не заполнен (или не включён)</p>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Действия -->
+  <div class="mt-8 flex flex-col md:flex-row gap-4">
+    {% if req.request_status == 'направлен на экспертизу' %}
+      <!-- Кнопка "Одобрить" -->
+      <form action="{{ url_for('moderator_approve', request_id=req.id) }}" method="POST" class="flex-1">
+        <button type="submit"
+                class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-6 rounded-lg shadow-md transition transform hover:scale-105"
+                onclick="return confirm('Одобрить заявку #{{ req.id }}?')">
+          Одобрить
+        </button>
+      </form>
+
+      <!-- Форма "Отклонить" -->
+      <form action="{{ url_for('moderator_reject', request_id=req.id) }}" method="POST" class="flex-1 flex gap-4">
+        <input type="text" name="reject_comment" placeholder="Причина отклонения"
+               class="flex-grow border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-red-500">
+        <button type="submit"
+                class="bg-red-600 hover:bg-red-700 text-white font-bold py-4 px-6 rounded-lg shadow-md transition transform hover:scale-105"
+                onclick="return confirm('Отклонить заявку #{{ req.id }}?')">
+          Отклонить
+        </button>
+      </form>
+    {% else %}
+      <!-- Сообщение о невозможности одобрения/отклонения -->
+      <div class="flex-1 bg-gray-200 text-gray-600 font-medium py-4 px-6 rounded-lg text-center">
+        Действия недоступны. Текущий статус заявки: {{ req.request_status }}
+      </div>
+    {% endif %}
+  </div>
+
+  <!-- Кнопка "Создать новую версию" -->
+  {% if req.request_status in ['принят к учёту', 'не принят к учёту'] %}
+    <form method="POST" action="{{ url_for('create_new_version', object_id=obj.id) }}" class="mt-8">
+      <button
+        type="submit"
+        class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg shadow-md transition transform hover:scale-105"
+        onclick="return confirm('Создать новую редакцию заявки? Старая будет в архиве.')"
+      >
+        Создать новую версию (редактировать)
+      </button>
+    </form>
+  {% endif %}
+
+  <!-- Ссылка на историю заявок этого объекта -->
+  <div class="mt-8 text-center">
+    <a
+      href="{{ url_for('requests_history', object_id=obj.id) }}"
+      class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg shadow-md transition transform hover:scale-105 inline-block"
+    >
+      Посмотреть историю заявок
+    </a>
+  </div>
+
+  <!-- Секция: Предыдущие версии заявок -->
+  {% if previous_requests %}
+    <div class="mt-12">
+      <h2 class="text-3xl font-semibold text-gray-800 mb-6 text-center">Предыдущие версии заявок</h2>
+      <div class="space-y-6">
+        {% for prev_req in previous_requests %}
+          <div class="bg-gray-100 p-6 rounded-lg shadow-inner" x-data="{ open: false }">
+            <div class="flex justify-between items-center cursor-pointer" @click="open = !open">
+              <h3 class="text-2xl font-semibold text-gray-700 border-b pb-2 mb-4">Заявка #{{ prev_req.id }}</h3>
+              <span class="text-gray-500" x-text="open ? '−' : '+'"></span>
+            </div>
+            <div x-show="open" x-collapse>
+              <p class="text-lg text-gray-700 mb-2">
+                <strong>Статус:</strong> <span class="text-yellow-300">{{ prev_req.request_status }}</span><br>
+                <strong>Дата создания:</strong> {{ prev_req.created_at.strftime('%d.%m.%Y %H:%M') }}
+              </p>
+              {% if prev_req.request_status == 'не принят к учёту' %}
+                <div class="mt-4 bg-red-50 p-4 border border-red-200 rounded-lg">
+                  <h4 class="text-xl font-semibold text-red-600 mb-2 text-center">Причина отклонения:</h4>
+                  <p class="text-red-700 text-center">
+                    {{ prev_req.reject_comment if prev_req.reject_comment else 'Комментарий не указан' }}
+                  </p>
+                </div>
+              {% endif %}
+              <!-- Блоки с атрибутами для предыдущих заявок -->
+              <div class="mt-4">
+                <!-- Атрибут 1 -->
+                <div class="bg-white p-4 rounded-lg shadow-inner mb-4">
+                  <h4 class="text-xl font-semibold text-gray-800 border-b pb-2 mb-2 text-center">Атрибут 1</h4>
+                  {% if prev_req.attr1 %}
+                    <dl class="space-y-2">
+                      <div class="flex">
+                        <dt class="w-1/3 text-right font-medium text-gray-700">Полное наименование информационной системы:</dt>
+                        <dd class="w-2/3 text-gray-900 ml-4">{{ prev_req.attr1.full_name_information_system }}</dd>
+                      </div>
+                      <div class="flex">
+                        <dt class="w-1/3 text-right font-medium text-gray-700">Сокращённое наименование информационной системы:</dt>
+                        <dd class="w-2/3 text-gray-900 ml-4">{{ prev_req.attr1.short_name_information_system }}</dd>
+                      </div>
+                      <div class="flex">
+                        <dt class="w-1/3 text-right font-medium text-gray-700">Полное наименование оператора:</dt>
+                        <dd class="w-2/3 text-gray-900 ml-4">{{ prev_req.attr1.full_name_operator }}</dd>
+                      </div>
+                      <div class="flex">
+                        <dt class="w-1/3 text-right font-medium text-gray-700">Сокращённое наименование оператора:</dt>
+                        <dd class="w-2/3 text-gray-900 ml-4">{{ prev_req.attr1.short_name_operator }}</dd>
+                      </div>
+                      <div class="flex">
+                        <dt class="w-1/3 text-right font-medium text-gray-700">Полные наименования пользователей:</dt>
+                        <dd class="w-2/3 text-gray-900 ml-4">{{ prev_req.attr1.full_names_users }}</dd>
+                      </div>
+                      <div class="flex">
+                        <dt class="w-1/3 text-right font-medium text-gray-700">Сокращённые наименования пользователей:</dt>
+                        <dd class="w-2/3 text-gray-900 ml-4">{{ prev_req.attr1.short_names_users }}</dd>
+                      </div>
+                      <div class="flex">
+                        <dt class="w-1/3 text-right font-medium text-gray-700">Дата ввода в эксплуатацию:</dt>
+                        <dd class="w-2/3 text-gray-900 ml-4">{{ prev_req.attr1.commissioning_date.strftime('%d.%m.%Y') if prev_req.attr1.commissioning_date else 'Не указана' }}</dd>
+                      </div>
+                      <div class="flex">
+                        <dt class="w-1/3 text-right font-medium text-gray-700">Ответственное подразделение:</dt>
+                        <dd class="w-2/3 text-gray-900 ml-4">{{ prev_req.attr1.responsible_department }}</dd>
+                      </div>
+                      <div class="flex">
+                        <dt class="w-1/3 text-right font-medium text-gray-700">Руководитель подразделения:</dt>
+                        <dd class="w-2/3 text-gray-900 ml-4">{{ prev_req.attr1.head_of_department_details }}</dd>
+                      </div>
+                      <div class="flex">
+                        <dt class="w-1/3 text-right font-medium text-gray-700">Ответственное лицо:</dt>
+                        <dd class="w-2/3 text-gray-900 ml-4">{{ prev_req.attr1.responsible_person_details }}</dd>
+                      </div>
+                      <div class="flex">
+                        <dt class="w-1/3 text-right font-medium text-gray-700">Цель:</dt>
+                        <dd class="w-2/3 text-gray-900 ml-4">{{ prev_req.attr1.purpose }}</dd>
+                      </div>
+                      <div class="flex">
+                        <dt class="w-1/3 text-right font-medium text-gray-700">Назначение:</dt>
+                        <dd class="w-2/3 text-gray-900 ml-4">{{ prev_req.attr1.designation }}</dd>
+                      </div>
+                      <div class="flex">
+                        <dt class="w-1/3 text-right font-medium text-gray-700">Область применения:</dt>
+                        <dd class="w-2/3 text-gray-900 ml-4">{{ prev_req.attr1.area_of_application }}</dd>
+                      </div>
+                      <div class="flex">
+                        <dt class="w-1/3 text-right font-medium text-gray-700">Функции:</dt>
+                        <dd class="w-2/3 text-gray-900 ml-4">{{ prev_req.attr1.functions }}</dd>
+                      </div>
+                    </dl>
+                  {% else %}
+                    <p class="text-gray-500 text-center">Атрибут 1 не заполнен</p>
+                  {% endif %}
+                </div>
+
+                <!-- Атрибут 2 -->
+                <div class="bg-white p-4 rounded-lg shadow-inner">
+                  <h4 class="text-xl font-semibold text-gray-800 border-b pb-2 mb-2 text-center">Атрибут 2</h4>
+                  {% if prev_req.status_1_enabled and prev_req.attr2 %}
+                    <dl class="space-y-2">
+                      <div class="flex">
+                        <dt class="w-1/3 text-right font-medium text-gray-700">Реквизиты решения:</dt>
+                        <dd class="w-2/3 text-gray-900 ml-4">{{ prev_req.attr2.data1 }}</dd>
+                      </div>
+                      <div class="flex">
+                        <dt class="w-1/3 text-right font-medium text-gray-700">
+                          Реквизиты правового акта исполнительного органа государственной власти Республики Саха (Якутия) о порядке и сроках ввода в эксплуатацию информационной системы:
+                        </dt>
+                        <dd class="w-2/3 text-gray-900 ml-4">{{ prev_req.attr2.data2 }}</dd>
+                      </div>
+                    </dl>
+                  {% else %}
+                    <p class="text-gray-500 text-center">Атрибут 2 не заполнен (или не включён)</p>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
+
+</div>
+{% endblock %}

@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mx-auto p-8">
+    <h1 class="text-3xl font-bold mb-6">Настройки</h1>
+    <form method="POST">
+        <div class="mb-4">
+            <label for="is_registration_enabled" class="inline-flex items-center">
+                <input type="checkbox" id="is_registration_enabled" name="is_registration_enabled"
+                       class="form-checkbox h-5 w-5 text-blue-600"
+                       {% if registration_enabled %}checked{% endif %}>
+                <span class="ml-2 text-gray-700">Разрешить регистрацию</span>
+            </label>
+        </div>
+        <button type="submit"
+                class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600">
+            Сохранить
+        </button>
+    </form>
+</div>
+{% endblock %}

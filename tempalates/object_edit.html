@@ -1,0 +1,358 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="mx-auto bg-white shadow-lg rounded-lg p-8 space-y-12">
+
+  <!-- Заголовок страницы -->
+  <header class="border-b pb-4">
+    <h2 class="text-3xl font-bold text-gray-800">Редактирование Объекта #{{ obj.id }}</h2>
+    <p class="text-lg text-gray-600 mt-2">Вы можете изменить данные заявки или отправить её на экспертизу.</p>
+  </header>
+
+  <!-- Основная форма для редактирования -->
+  <form method="POST" action="{{ url_for('object_update', object_id=obj.id) }}" class="space-y-8">
+
+    <!-- Блок: Чекбокс для Атрибута 2 -->
+    <section>
+      <div class="flex items-center">
+        <input
+          type="checkbox"
+          name="attr2_enabled"
+          id="attr2_enabled"
+          class="form-checkbox h-6 w-6 text-blue-600"
+          {% if req.status_1_enabled %} checked {% endif %}
+        >
+        <label for="attr2_enabled" class="ml-3 text-gray-700 font-medium">
+          Система является ГИС
+        </label>
+      </div>
+    </section>
+
+    <!-- Блок: Атрибут 1 -->
+    <section class="bg-gray-50 p-6 rounded-lg shadow-inner space-y-6">
+      <h3 class="text-2xl font-semibold text-gray-700 mb-4">Информация об информационной системе</h3>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Полное наименование информационной системы -->
+        <div>
+          <label for="full_name_information_system" class="block text-gray-700 font-medium mb-2">
+            Полное наименование информационной системы:
+          </label>
+          <input required
+            type="text"
+            id="full_name_information_system"
+            name="full_name_information_system"
+            class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            value="{{ attr1.full_name_information_system if attr1 else '' }}"
+            placeholder="Введите полное наименование"
+          >
+        </div>
+
+        <!-- Сокращённое наименование информационной системы -->
+        <div>
+          <label for="short_name_information_system" class="block text-gray-700 font-medium mb-2">
+            Сокращённое наименование информационной системы:
+          </label>
+          <input required
+            type="text"
+            id="short_name_information_system"
+            name="short_name_information_system"
+            class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            value="{{ attr1.short_name_information_system if attr1 else '' }}"
+            placeholder="Введите сокращённое наименование"
+          >
+        </div>
+      </div>
+    </section>
+
+    <!-- Блок: Информация об операторе -->
+    <section class="bg-gray-50 p-6 rounded-lg shadow-inner space-y-6">
+      <h3 class="text-2xl font-semibold text-gray-700 mb-4">Информация о операторе</h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Полное наименование оператора -->
+        <div>
+          <label for="full_name_operator" class="block text-gray-700 font-medium mb-2">
+            Полное наименование оператора:
+          </label>
+          <input required
+            type="text"
+            id="full_name_operator"
+            name="full_name_operator"
+            class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            value="{{ attr1.full_name_operator if attr1 else '' }}"
+            placeholder="Введите полное наименование оператора"
+          >
+        </div>
+
+        <!-- Сокращённое наименование оператора -->
+        <div>
+          <label for="short_name_operator" class="block text-gray-700 font-medium mb-2">
+            Сокращённое наименование оператора:
+          </label>
+          <input required
+            type="text"
+            id="short_name_operator"
+            name="short_name_operator"
+            class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            value="{{ attr1.short_name_operator if attr1 else '' }}"
+            placeholder="Введите сокращённое наименование оператора"
+          >
+        </div>
+      </div>
+    </section>
+
+    <!-- Блок: Сведения о пользователе(-ях) -->
+    <section class="bg-gray-50 p-6 rounded-lg shadow-inner space-y-6">
+      <h3 class="text-2xl font-semibold text-gray-700 mb-4">Сведения о пользователе(-ях)</h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Полные наименования пользователей -->
+        <div>
+          <label for="full_names_users" class="block text-gray-700 font-medium mb-2">
+            Полные наименования пользователей:
+          </label>
+          <textarea required
+            id="full_names_users"
+            name="full_names_users"
+            class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Введите полные наименования пользователей"
+          >{{ attr1.full_names_users if attr1 else '' }}</textarea>
+        </div>
+
+        <!-- Сокращённые наименования пользователей -->
+        <div>
+          <label for="short_names_users" class="block text-gray-700 font-medium mb-2">
+            Сокращённые наименования пользователей:
+          </label>
+          <textarea required
+            id="short_names_users"
+            name="short_names_users"
+            class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Введите сокращённые наименования пользователей"
+          >{{ attr1.short_names_users if attr1 else '' }}</textarea>
+        </div>
+      </div>
+    </section>
+
+    <!-- Блок: Сведения о вводе в эксплуатацию -->
+    <section class="bg-gray-50 p-6 rounded-lg shadow-inner space-y-6">
+      <h3 class="text-2xl font-semibold text-gray-700 mb-4">Сведения о вводе в эксплуатацию</h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Дата ввода в эксплуатацию -->
+        <div>
+          <label for="commissioning_date" class="block text-gray-700 font-medium mb-2">
+            Дата ввода в эксплуатацию:
+          </label>
+          <input required
+            type="date"
+            id="commissioning_date"
+            name="commissioning_date"
+            class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            value="{{ attr1.commissioning_date.strftime('%Y-%m-%d') if attr1 and attr1.commissioning_date else '' }}"
+          >
+        </div>
+      </div>
+    </section>
+
+    <!-- Блок: Сведения об ответственных лицах -->
+    <section class="bg-gray-50 p-6 rounded-lg shadow-inner space-y-6">
+      <h3 class="text-2xl font-semibold text-gray-700 mb-4">Сведения об ответственных лицах</h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Ответственное подразделение -->
+        <div>
+          <label for="responsible_department" class="block text-gray-700 font-medium mb-2">
+            Ответственное подразделение:
+          </label>
+          <input required
+            type="text"
+            id="responsible_department"
+            name="responsible_department"
+            class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            value="{{ attr1.responsible_department if attr1 else '' }}"
+            placeholder="Введите наименование подразделения"
+          >
+        </div>
+
+        <!-- Руководитель подразделения -->
+        <div>
+          <label for="head_of_department_details" class="block text-gray-700 font-medium mb-2">
+            Руководитель подразделения (ФИО, контакты):
+          </label>
+          <textarea required
+            id="head_of_department_details"
+            name="head_of_department_details"
+            class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Введите ФИО и контакты руководителя"
+          >{{ attr1.head_of_department_details if attr1 else '' }}</textarea>
+        </div>
+
+        <!-- Ответственное лицо -->
+        <div>
+          <label for="responsible_person_details" class="block text-gray-700 font-medium mb-2">
+            Ответственное лицо (ФИО, должность, контакты):
+          </label>
+          <textarea required
+            id="responsible_person_details"
+            name="responsible_person_details"
+            class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Введите ФИО, должность и контакты"
+          >{{ attr1.responsible_person_details if attr1 else '' }}</textarea>
+        </div>
+      </div>
+    </section>
+
+    <!-- Блок: Общие сведения о системе -->
+    <section class="bg-gray-50 p-6 rounded-lg shadow-inner space-y-6">
+      <h3 class="text-2xl font-semibold text-gray-700 mb-4">Общие сведения о системе</h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Цель -->
+        <div>
+          <label for="purpose" class="block text-gray-700 font-medium mb-2">
+            Цель:
+          </label>
+          <textarea required
+            id="purpose"
+            name="purpose"
+            class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Введите цель"
+          >{{ attr1.purpose if attr1 else '' }}</textarea>
+        </div>
+
+        <!-- Назначение -->
+        <div>
+          <label for="designation" class="block text-gray-700 font-medium mb-2">
+            Назначение:
+          </label>
+          <textarea required
+            id="designation"
+            name="designation"
+            class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Введите назначение"
+          >{{ attr1.designation if attr1 else '' }}</textarea>
+        </div>
+
+        <!-- Область применения -->
+        <div>
+          <label for="area_of_application" class="block text-gray-700 font-medium mb-2">
+            Область применения:
+          </label>
+          <textarea required
+            id="area_of_application"
+            name="area_of_application"
+            class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Введите область применения"
+          >{{ attr1.area_of_application if attr1 else '' }}</textarea>
+        </div>
+
+        <!-- Функции -->
+        <div>
+          <label for="functions" class="block text-gray-700 font-medium mb-2">
+            Функции:
+          </label>
+          <textarea required
+            id="functions"
+            name="functions"
+            class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Введите функции"
+          >{{ attr1.functions if attr1 else '' }}</textarea>
+        </div>
+      </div>
+    </section>
+
+    <!-- Блок: Атрибут 2 (скрыт, если чекбокс не включён) -->
+    <section
+      id="attribute2Block"
+      class="{% if not req.status_1_enabled %}hidden{% endif %} bg-gray-50 p-6 rounded-lg shadow-inner space-y-6"
+    >
+      <h3 class="text-2xl font-semibold text-gray-700 mb-4">Сведения о НПА</h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Реквизиты решения о создании информационной системы -->
+        <div>
+          <label for="a2_data1" class="block text-gray-700 font-medium mb-2">
+            Реквизиты решения о создании информационной системы:
+          </label>
+          <input
+            type="text"
+            id="a2_data1"
+            name="a2_data1"
+            class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            value="{{ attr2.data1 if attr2 else '' }}"
+            placeholder="Введите реквизиты решения"
+          >
+        </div>
+
+        <!-- Реквизиты правового акта -->
+        <div>
+          <label for="a2_data2" class="block text-gray-700 font-medium mb-2">
+            Реквизиты правового акта исполнительного органа государственной власти Республики Саха (Якутия) о порядке и сроках ввода в эксплуатацию информационной системы:
+          </label>
+          <input
+            type="text"
+            id="a2_data2"
+            name="a2_data2"
+            class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            value="{{ attr2.data2 if attr2 else '' }}"
+            placeholder="Введите реквизиты правового акта"
+          >
+        </div>
+      </div>
+    </section>
+
+    <!-- Блок: Действия -->
+    <section class="flex space-x-4">
+      <!-- Кнопка "Сохранить" -->
+      <button
+        type="submit"
+        name="action"
+        value="save"
+        class="flex-1 bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg shadow-md transition transform hover:scale-105"
+      >
+        Сохранить
+      </button>
+
+      <!-- Кнопка "Отправить на экспертизу" -->
+      {% if req.request_status == 'редактирование' %}
+        <button
+          type="submit"
+          name="action"
+          value="submit"
+          class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg shadow-md transition transform hover:scale-105"
+          onclick="return confirm('Отправить заявку на экспертизу?')"
+        >
+          Отправить на экспертизу
+        </button>
+      {% else %}
+        <div class="flex-1 bg-gray-200 text-gray-600 font-medium py-3 px-6 rounded-lg">
+          Текущий статус заявки: {{ req.request_status }}
+        </div>
+      {% endif %}
+    </section>
+  </form>
+
+  <!-- Ссылка на историю заявок -->
+  <footer class="text-right">
+    <a
+      href="{{ url_for('requests_history', object_id=obj.id) }}"
+      class="text-blue-600 hover:text-blue-800 font-semibold underline"
+    >
+      Посмотреть историю заявок
+    </a>
+  </footer>
+</div>
+
+<!-- JavaScript для управления видимостью Атрибута 2 -->
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const checkbox = document.getElementById('attr2_enabled');
+    const attribute2Block = document.getElementById('attribute2Block');
+
+    if (checkbox) {
+      checkbox.addEventListener('change', function() {
+        if (this.checked) {
+          attribute2Block.classList.remove('hidden');
+        } else {
+          attribute2Block.classList.add('hidden');
+        }
+      });
+    }
+  });
+</script>
+{% endblock %}
